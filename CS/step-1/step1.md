@@ -125,8 +125,8 @@ XOR은 `^`로 표현가능하다.
 
 ```js
 function halfadder(bitA, bitB) {
-  var c = bitA && bitB ? 1 : 0;
-  var s = bitA ^ bitB ? 1 : 0;
+  var c = bitA && bitB;
+  var s = bitA ^ bitB;
   var answer = [s, c];
   return answer;
 }
@@ -205,7 +205,7 @@ s는 acc에 저장하고 c는 다음 연산에 사용한다.
 function byteadder(byteA, byteB) {
   var s;
   var c = 0;
-  answer = byteA
+  var answer = byteA
     .reduce((acc, cur, i) => {
       [s, c] = fulladder(byteA[i], byteB[i], c);
       return acc.concat(s);

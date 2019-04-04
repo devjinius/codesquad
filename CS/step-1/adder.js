@@ -1,6 +1,6 @@
 function halfadder(bitA, bitB) {
-  var c = bitA && bitB ? 1 : 0;
-  var s = bitA ^ bitB ? 1 : 0;
+  var c = bitA && bitB;
+  var s = bitA ^ bitB;
   var answer = [s, c];
   return answer;
 }
@@ -15,7 +15,7 @@ function fulladder(bitA, bitB, carry) {
 function byteadder(byteA, byteB) {
   var c = 0;
   var s = 0;
-  answer = byteA
+  var answer = byteA
     .reduce((acc, cur, i) => {
       [s, c] = fulladder(byteA[i], byteB[i], c);
       return acc.concat(s);
