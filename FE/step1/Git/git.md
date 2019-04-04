@@ -85,3 +85,12 @@ fetch는 로컬 저장소까지만 가져오고 HEAD는 움직이지 않는다. 
 ## stash
 
 임시저장소다. 작업하다가 master 브랜치의 버그가 발생한 것을 인지 한경우 커밋을 할 순 없으니 stash에 저장한 뒤 master로 이동한다.
+
+---
+
+### 참고자료
+
+- [git의 원리 (git object를 중심으로)(빨간색코딩)](https://sjh836.tistory.com/37)
+- [쩜깃의 이해](https://jusths.tistory.com/64)
+
+두 사이트 모두 정말 큰 도움 됐습니다.
