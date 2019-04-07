@@ -78,9 +78,19 @@ init부터 여기까지의 어려웠던 내용이 바로 아래 그림이다.
 
 ## git pull & git fetch
 
-pull은 remote 저장소의 내용을 받아 working tree 까지 반영한다. 즉 HEAD와 Origin을 일치시킨다.
+위의 그림의 좌측 맨위를 보면 HEAD는 ref/heads/master 를 바라본다. 설명을 위해 master브랜치에서만 작업한다고 가정하자. 로컬에서는 9번 커밋까지만 진행하고 누군가 10번 커밋을 진행해 push했다고 가정하자.
 
-fetch는 로컬 저장소까지만 가져오고 HEAD는 움직이지 않는다. 이 때 merge 작업을 진행해 HEAD를 움직여준다.
+`fetch` 명령을 같은 master 브랜치로 실행한다면 remote 저장소의 objects, branch등을 로컬 저장소로 가져온다. 그럼 ref/remotes/origin/master 즉 origin/master 브랜치 참조변수는 remote에서 변경된 10번 커밋을 바라볼 것이다.
+
+| ref/heads/master | ref/remotes/origin/master |
+| ---------------- | ------------------------- |
+| 9번커밋          | 10번커밋                  |
+
+이게 현재 상황이다. 같은 master 브랜치지만 remotes와 local이 바라보는 커밋이 다르다.
+
+이 때 merge 작업을 진행해 HEAD를 움직여준다.
+
+`pull` 명령은 remote 저장소의 변경사항을 받아 merge까지 진행한다. HEAD가 변경되고 그에따라 커밋이 바라보는 tree객체가 변경된다. 따라서 tree에 쓰인 파일 정보가 달라 working tree 까지 반영한다.
 
 ## stash
 
@@ -94,3 +104,6 @@ fetch는 로컬 저장소까지만 가져오고 HEAD는 움직이지 않는다. 
 - [쩜깃의 이해](https://jusths.tistory.com/64)
 
 두 사이트 모두 정말 큰 도움 됐습니다.
+
+- [생활코딩 gistory youtube](https://www.youtube.com/watch?v=QpTzoiiYoV4&list=PLuHgQVnccGMC6_JRFarkLPBfSNFwrGVlJ&index=6&t=0s)
+- [pro git](https://git-scm.com/book/ko/v2)
