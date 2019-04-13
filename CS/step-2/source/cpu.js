@@ -18,30 +18,17 @@ class CPU {
   }
 
   reset() {
-    this.register.forEach((r, i) => {
-      if (i === 0) {
-        this.register[i] = 0;
-      } else {
-        this.register[i] = undefined;
-      }
-    });
-  }
-
-  reset() {
-    for (let i in this.register) {
-      if (i === 0) this.register[i] = 0;
-      else this.register[i] = undefined;
-    }
+    this.register.forEach((register, i) => (this.register[i] = 0));
   }
 
   execute(IR) {
     let INSTRUCTION, first, second, isVal, third;
 
     [INSTRUCTION, first, second, isVal, third] = this.decode(IR);
-    // console.log(INSTRUCTION, first, second, isVal, third);
+
     const instWord = excuteList.instList[INSTRUCTION]();
     const value = excuteList[instWord].call(this, second, third, isVal);
-    // console.log(value);
+
     if (instWord === 'STORE') {
       this.memory.store(value, this.register[transform.bin2dec(first)]);
     } else {
