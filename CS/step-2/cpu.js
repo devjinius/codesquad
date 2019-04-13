@@ -38,37 +38,25 @@ class CPU {
   }
 
   execute(IR) {
+    const instList = {
+      '0001': () => 'LOAD',
+      '0010': () => 'LOAD',
+      '0011': () => 'STORE',
+      '0100': () => 'STORE',
+      '0101': () => 'AND',
+      '0110': () => 'OR',
+      '0111': () => 'ADD',
+      '1000': () => 'ADD',
+      '1001': () => 'SUB',
+      '1010': () => 'SUB',
+      '1011': () => 'MOV'
+    };
+
     let INSTRUCTION, first, second, third, fourth;
 
     [INSTRUCTION, first, second, third, fourth] = this.decode(IR);
     // console.log(INSTRUCTION, first, second, third, fourth);
-    switch (INSTRUCTION) {
-      case '0001':
-      case '0010':
-        console.log('LOAD');
-        break;
-      case '0011':
-      case '0100':
-        console.log('STORE');
-        break;
-      case '0101':
-        console.log('AND');
-        break;
-      case '0110':
-        console.log('OR');
-        break;
-      case '0111':
-      case '1000':
-        console.log('ADD');
-        break;
-      case '1001':
-      case '1010':
-        console.log('SUB');
-        break;
-      case '1011':
-        console.log('MOV');
-        break;
-    }
+    console.log(instList[INSTRUCTION]());
   }
 
   // 2진수로 표현된 명령어를 규칙에 따라 해석합니다.
