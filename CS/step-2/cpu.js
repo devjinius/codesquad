@@ -4,13 +4,6 @@ class CPU {
   constructor(memory) {
     this.memory = memory;
     this.register = Array(8).fill(0);
-    this.register[1] = 1;
-    this.register[2] = 2;
-    this.register[3] = 3;
-    this.register[4] = 4;
-    this.register[5] = 5;
-    this.register[6] = 6;
-    this.register[7] = 7;
   }
 
   reset() {
@@ -58,8 +51,10 @@ class CPU {
       methodList: {
         LOAD: (base, offset, isVal) =>
           this.bin2dec(isVal) === 1
-            ? this.register[this.bin2dec(base)] + this.bin2dec(offset)
-            : this.register[this.bin2dec(base)] + this.register[this.bin2dec(offset)],
+            ? this.memory.load(this.register[this.bin2dec(base)] + this.bin2dec(offset))
+            : this.memory.load(
+                this.register[this.bin2dec(base)] + this.register[this.bin2dec(offset)]
+              ),
         STORE: (base, offset, isVal) =>
           this.bin2dec(isVal) === 1
             ? this.register[this.bin2dec(base)] + this.bin2dec(offset)
@@ -81,10 +76,15 @@ class CPU {
     let INSTRUCTION, first, second, isVal, third;
 
     [INSTRUCTION, first, second, isVal, third] = this.decode(IR);
-    console.log(INSTRUCTION, first, second, isVal, third);
+    // console.log(INSTRUCTION, first, second, isVal, third);
     const instWord = excuteList.instList[INSTRUCTION]();
     const value = excuteList.methodList[instWord].call(this, second, third, isVal);
-    console.log(value);
+
+    if (instWord === 'STORE') {
+      this.memory.store(value, this.register[this.bin2dec(first)]);
+    } else {
+      this.register[this.bin2dec(first)] = value;
+    }
   }
 
   // 2진수로 표현된 명령어를 규칙에 따라 해석합니다.
@@ -150,7 +150,7 @@ class CPU {
   }
 }
 
-const memoryArea = new Uint16Array(131071);
+const memoryArea = new Array(131071);
 const memory = new Memory(memoryArea);
 const cpu = new CPU(memory);
 
@@ -160,11 +160,37 @@ const cpu = new CPU(memory);
 // console.log(cpu.fetch());
 // console.log(cpu.fetch());
 // console.log(cpu.fetch());
-cpu.execute(4739); // LOAD R1, R2, R3
-cpu.execute(15044); // STORE R5, R3, R4
-cpu.execute(11966); // LOAD R7, R2, #30
-cpu.execute(43432); // SUB R4, R6, #8
-cpu.execute(47354); // MOV R4, #250
-cpu.execute(30853); // ADD R4, R2, R5
+
+// cpu.execute(4739); // LOAD R1, R2, R3
+// cpu.execute(15044); // STORE R5, R3, R4
+// cpu.execute(11966); // LOAD R7, R2, #30
+// cpu.execute(43432); // SUB R4, R6, #8
+// cpu.execute(47354); // MOV R4, #250
+// cpu.execute(30853); // ADD R4, R2, R5
+
+// ========
+
+memory.store(12, 100);
+memory.locate([47114, 47618, 4869, 33892, 38466, 18212]);
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+cpu.execute(cpu.fetch());
+console.log(cpu.dump());
+console.log(memory.load(14));
+
+// cpu.execute(47114); // MOV R4, 0xA0
+// cpu.execute(47618); // MOV R2, 0x02
+// cpu.execute(4869); // LOAD R1, R4, R5
+// cpu.execute(33892); // ADD R2, R1, #4
+// cpu.execute(38466); // SUB R3, R1, R2
+// cpu.execute(18212); // STORE R3, R4, #4
 
 // console.log(cpu.dump());
