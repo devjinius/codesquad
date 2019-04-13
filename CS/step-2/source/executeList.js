@@ -27,10 +27,10 @@ module.exports = {
       : this.register[transform.bin2dec(base)] + this.register[transform.bin2dec(offset)];
   },
   AND(op1, op2) {
-    return this.register[transform.bin2dec(op1)] && this.register[transform.bin2dec];
+    return this.register[transform.bin2dec(op1)] && this.register[transform.bin2dec(op2)];
   },
   OR(op1, op2) {
-    return this.register[transform.bin2dec(op1)] || this.register[transform.bin2dec];
+    return this.register[transform.bin2dec(op1)] || this.register[transform.bin2dec(op2)];
   },
   ADD(op1, op2, isVal) {
     return transform.bin2dec(isVal) === 1
