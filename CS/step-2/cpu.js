@@ -1,16 +1,11 @@
-const Memory = require('./memory.js');
+const Memory = require('./memory');
+const excuteList = require('./executeList');
+const transform = require('./transform');
 
 class CPU {
   constructor(memory) {
     this.memory = memory;
     this.register = Array(8).fill(0);
-  }
-
-  reset() {
-    for (let i in this.register) {
-      if (i === 0) this.register[i] = 0;
-      else this.register[i] = undefined;
-    }
   }
 
   fetch() {
@@ -33,64 +28,32 @@ class CPU {
     });
   }
 
-  execute(IR) {
-    const excuteList = {
-      instList: {
-        '0001': () => 'LOAD',
-        '0010': () => 'LOAD',
-        '0011': () => 'STORE',
-        '0100': () => 'STORE',
-        '0101': () => 'AND',
-        '0110': () => 'OR',
-        '0111': () => 'ADD',
-        '1000': () => 'ADD',
-        '1001': () => 'SUB',
-        '1010': () => 'SUB',
-        '1011': () => 'MOV'
-      },
-      methodList: {
-        LOAD: (base, offset, isVal) =>
-          this.bin2dec(isVal) === 1
-            ? this.memory.load(this.register[this.bin2dec(base)] + this.bin2dec(offset))
-            : this.memory.load(
-                this.register[this.bin2dec(base)] + this.register[this.bin2dec(offset)]
-              ),
-        STORE: (base, offset, isVal) =>
-          this.bin2dec(isVal) === 1
-            ? this.register[this.bin2dec(base)] + this.bin2dec(offset)
-            : this.register[this.bin2dec(base)] + this.register[this.bin2dec(offset)],
-        AND: (op1, op2) => this.register[this.bin2dec(op1)] && this.register[this.bin2dec(op2)],
-        OR: (op1, op2) => this.register[this.bin2dec(op1)] || this.register[this.bin2dec(op2)],
-        ADD: (op1, op2, isVal) =>
-          this.bin2dec(isVal) === 1
-            ? this.register[this.bin2dec(op1)] + this.bin2dec(op2)
-            : this.register[this.bin2dec(op1)] + this.register[this.bin2dec(op2)],
-        SUB: (op1, op2, isVal) =>
-          this.bin2dec(isVal) === 1
-            ? this.register[this.bin2dec(op1)] - this.bin2dec(op2)
-            : this.register[this.bin2dec(op1)] - this.register[this.bin2dec(op2)],
-        MOV: val => this.bin2dec(val)
-      }
-    };
+  reset() {
+    for (let i in this.register) {
+      if (i === 0) this.register[i] = 0;
+      else this.register[i] = undefined;
+    }
+  }
 
+  execute(IR) {
     let INSTRUCTION, first, second, isVal, third;
 
     [INSTRUCTION, first, second, isVal, third] = this.decode(IR);
     // console.log(INSTRUCTION, first, second, isVal, third);
     const instWord = excuteList.instList[INSTRUCTION]();
-    const value = excuteList.methodList[instWord].call(this, second, third, isVal);
-
+    const value = excuteList[instWord].call(this, second, third, isVal);
+    // console.log(value);
     if (instWord === 'STORE') {
-      this.memory.store(value, this.register[this.bin2dec(first)]);
+      this.memory.store(value, this.register[transform.bin2dec(first)]);
     } else {
-      this.register[this.bin2dec(first)] = value;
+      this.register[transform.bin2dec(first)] = value;
     }
   }
 
   // 2진수로 표현된 명령어를 규칙에 따라 해석합니다.
   decode(IR) {
     const BIT_LENGTH = 16;
-    const binIRArr = this.dec2bin(IR);
+    const binIRArr = transform.dec2bin(IR);
 
     // 16비트로 맞춰줌
     while (binIRArr.length < BIT_LENGTH) {
@@ -120,33 +83,6 @@ class CPU {
       second = binIRArr;
       return [INSTRUCTION, first, second];
     }
-  }
-
-  dec2bin(decimal) {
-    var answer = [];
-    while (decimal !== 0) {
-      answer.unshift(decimal % 2);
-      decimal = Math.floor(decimal / 2);
-    }
-
-    return answer;
-  }
-
-  bin2dec(bin) {
-    let i = 0;
-    return bin.reduceRight((acc, cur) => {
-      acc += cur * this.twoPow(i);
-      i++;
-      return acc;
-    }, 0);
-  }
-
-  twoPow(n) {
-    let res = 1;
-    for (let i = 0; i < n; i++) {
-      res *= 2;
-    }
-    return res;
   }
 }
 
