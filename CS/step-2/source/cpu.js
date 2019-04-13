@@ -1,4 +1,3 @@
-const Memory = require('./memory');
 const excuteList = require('./executeList');
 const transform = require('./transform');
 
@@ -9,7 +8,7 @@ class CPU {
   }
 
   fetch() {
-    const program = memory.fetch(this.register[0]);
+    const program = this.memory.fetch(this.register[0]);
     this.register[0] += 1;
     return program;
   }
@@ -86,16 +85,7 @@ class CPU {
   }
 }
 
-const memoryArea = new Array(131071);
-const memory = new Memory(memoryArea);
-const cpu = new CPU(memory);
-
-// memory.locate([1, 2, 10]);
-// console.log(memory.peek(0));
-// console.log(memory.peek(2));
-// console.log(cpu.fetch());
-// console.log(cpu.fetch());
-// console.log(cpu.fetch());
+// test cases
 
 // cpu.execute(4739); // LOAD R1, R2, R3
 // cpu.execute(15044); // STORE R5, R3, R4
@@ -104,29 +94,4 @@ const cpu = new CPU(memory);
 // cpu.execute(47354); // MOV R4, #250
 // cpu.execute(30853); // ADD R4, R2, R5
 
-// ========
-
-memory.store(12, 100);
-memory.locate([47114, 47618, 4869, 33892, 38466, 18212]);
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-cpu.execute(cpu.fetch());
-console.log(cpu.dump());
-console.log(memory.load(14));
-
-// cpu.execute(47114); // MOV R4, 0xA0
-// cpu.execute(47618); // MOV R2, 0x02
-// cpu.execute(4869); // LOAD R1, R4, R5
-// cpu.execute(33892); // ADD R2, R1, #4
-// cpu.execute(38466); // SUB R3, R1, R2
-// cpu.execute(18212); // STORE R3, R4, #4
-
-// console.log(cpu.dump());
+module.exports = CPU;

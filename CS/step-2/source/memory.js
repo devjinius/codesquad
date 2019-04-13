@@ -1,5 +1,3 @@
-// 메모리 객체를 만들어 봅시다.
-
 class Memory {
   constructor(memoryArea) {
     this.memoryArea = memoryArea;
@@ -37,7 +35,7 @@ class Memory {
   }
 }
 
-// const memoryArea = new Uint16Array(131071);
+// test cases
 
 // console.log('메모리를 초기화합니다.');
 // console.log('=====================');
