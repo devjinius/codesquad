@@ -75,13 +75,23 @@ class CPU {
   }
 }
 
-// test cases
+// test case
 
-// cpu.execute(4739); // LOAD R1, R2, R3
-// cpu.execute(15044); // STORE R5, R3, R4
-// cpu.execute(11966); // LOAD R7, R2, #30
-// cpu.execute(43432); // SUB R4, R6, #8
-// cpu.execute(47354); // MOV R4, #250
-// cpu.execute(30853); // ADD R4, R2, R5
+// const Memory = require('./memory');
+// const memoryArea = new Array(131071);
+// const memory = new Memory(memoryArea);
+// const cpu = new CPU(memory);
+// memory.store(12, 10);
+
+// cpu.execute(47114); // MOV R4, 0xA0
+// console.log(cpu.dump());
+// cpu.execute(47618); // MOV R5, 0x02
+// console.log(cpu.dump());
+// cpu.execute(4869); // LOAD R1, R4, R5
+// console.log(cpu.dump());
+// cpu.execute(33892); // ADD R2, R1, #4
+// console.log(cpu.dump());
+// cpu.execute(38466); // SUB R3, R1, R2
+// console.log(cpu.dump());
 
 module.exports = CPU;
