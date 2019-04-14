@@ -50,22 +50,22 @@ class CPU {
 
     // INSTRUCTION만 뽑는다.
     const INSTRUCTION = binIRArr.splice(0, 4).join('');
-    let first, second, third, fourth;
+    let first, second, isVal, third;
 
     // 조건에 맞추어 유의미한 비트별로 splice 한다.
     if (INSTRUCTION !== '1011') {
       first = binIRArr.splice(0, 3);
       second = binIRArr.splice(0, 3);
       if (binIRArr[0] !== 1) {
-        third = binIRArr.splice(0, 3);
-        fourth = binIRArr;
+        isVal = binIRArr.splice(0, 3);
+        third = binIRArr;
       } else {
         // offset. value인 경우
-        third = binIRArr.splice(0, 1);
-        fourth = binIRArr;
+        isVal = binIRArr.splice(0, 1);
+        third = binIRArr;
       }
 
-      return [INSTRUCTION, first, second, third, fourth];
+      return [INSTRUCTION, first, second, isVal, third];
     } else {
       // MOV인경우
       first = binIRArr.splice(0, 3);
