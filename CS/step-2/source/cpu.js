@@ -14,7 +14,7 @@ class CPU {
   }
 
   dump() {
-    return this.register.filter((r, i) => i !== 0);
+    return this.register;
   }
 
   reset() {
