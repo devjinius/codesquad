@@ -28,13 +28,13 @@ class CPU {
     [INSTRUCTION, first, second, isVal, third] = this.decode(IR);
 
     const instWord = excuteList.instList[INSTRUCTION](); // 명령어 비트를 string으로 변환
-    const value = excuteList[instWord].call(this, second, third, isVal); // 연산 실행
+    const executeResult = excuteList[instWord].call(this, second, third, isVal); // 연산 실행
 
     // store인경우 메모리에 저장하고 나머지의 경우 dst.reg에 저장
     if (instWord === 'STORE') {
-      this.memory.store(value, this.register[transform.bin2dec(first)]);
+      this.memory.store(executeResult, this.register[transform.bin2dec(first)]);
     } else {
-      this.register[transform.bin2dec(first)] = value;
+      this.register[transform.bin2dec(first)] = executeResult;
     }
   }
 

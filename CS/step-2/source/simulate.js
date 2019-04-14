@@ -32,7 +32,7 @@ memory.locate(program2);
 
 console.log(`프로그램을 실행하기 전 데이터 : ${memory.load(16)}`);
 
-program2.forEach((p, i) => {
+program2.forEach(_ => {
   cpu.execute(cpu.fetch());
   console.log(cpu.dump());
 });
