@@ -3,13 +3,19 @@ const todos = require('./data');
 class Todo {
   constructor(todos) {
     this.todos = todos;
-    this.customTodos = todos.reduce(
-      (acc, cur) => {
-        acc[cur.status].push(cur.name);
-        return acc;
-      },
-      { todo: [], doing: [], done: [] }
-    );
+    this.todoCount = this.setTodoCount(todos);
+  }
+
+  setTodoCount(todos) {
+    return todos.reduce((acc, cur) => {
+      acc[cur.status] =
+        acc[cur.status] === undefined ? [cur.name] : acc[cur.status].concat(cur.name);
+      return acc;
+    }, {});
+  }
+
+  hello() {
+    console.log('hello');
   }
 
   show(type, condition) {
@@ -27,13 +33,15 @@ class Todo {
   }
 
   printAll() {
-    return Object.entries(this.customTodos).reduce((acc, cur) => {
+    return Object.entries(this.todoCount).reduce((acc, cur) => {
       return (acc += `${cur[0]}: ${cur[1].length}개 `);
     }, '현재상태 : ');
   }
 
   printStatus(status) {
-    return `${status}리스트 총 ${this.customTodos[status].length}건 : ${this.customTodos[status]}`;
+    return `${status}리스트 총 ${this.todoCount[status].length}건 : ${this.todoCount[status].join(
+      ', '
+    )}`;
   }
 
   printTags(tag) {
