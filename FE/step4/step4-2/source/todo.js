@@ -1,7 +1,10 @@
+const message = require('./msg');
+
 class Todo {
-  constructor(data) {
+  constructor(data, inputPrompt) {
     this.data = data;
     this.todoCount = this.setTodoCount(data);
+    this.inputPrompt = inputPrompt;
   }
 
   setTodoCount(data) {
@@ -12,7 +15,12 @@ class Todo {
     }, {});
   }
 
-  add(name, tags = '', inputPrompt) {
+  logMessage(message, time) {
+    console.log(message);
+    setTimeout(() => this.show('status', 'all', this.inputPrompt), time);
+  }
+
+  add(name, tags = '') {
     // string type의 tags를 string type 배열로 만듦
     tags = tags.replace(/[\[\]\"\'\s]/g, '').split(',');
 
@@ -21,12 +29,11 @@ class Todo {
 
     this.data.push(addData);
     this.todoCount.todo.push(name);
-    console.log(`${name} 1개가 추가되었습니다.(id : ${id})`);
 
-    setTimeout(() => this.show('status', 'all', inputPrompt), 1000);
+    this.logMessage(message.ADD_DATA(name, id), 1000);
   }
 
-  delete(id, inputPrompt) {
+  delete(id) {
     const beforeLen = this.data.length;
     let name;
 
@@ -34,13 +41,9 @@ class Todo {
     this.todoCount = this.setTodoCount(this.data);
 
     const returnMessage =
-      beforeLen === this.data.length
-        ? '입력하신 id가 존재하지 않습니다.'
-        : `${name} todo가 목록에서 삭제되었습니다.`;
+      beforeLen === this.data.length ? message.NOT_EXISTED_ID : message.DELETED_DATA(name);
 
-    console.log(returnMessage);
-
-    setTimeout(() => this.show('status', 'all', inputPrompt), 1000);
+    this.logMessage(returnMessage, 1000);
   }
 
   // 반환값 [filteredData, deletedName]
@@ -59,7 +62,7 @@ class Todo {
     ];
   }
 
-  update(id, status, inputPrompt) {
+  update(id, status) {
     let name;
     this.data.map(todo => {
       if (todo.id === Number(id)) {
@@ -71,17 +74,14 @@ class Todo {
     this.todoCount = this.setTodoCount(this.data);
 
     const returnMessage =
-      name === undefined
-        ? '입력하신 id가 존재하지 않습니다.'
-        : `${name}가 ${status}로 변경되었습니다.`;
+      name === undefined ? message.NOT_EXISTED_ID : message.UPDATE_DATA(name, status);
 
     setTimeout(() => {
-      console.log(returnMessage);
-      setTimeout(() => this.show('status', 'all', inputPrompt), 1000);
+      this.logMessage(returnMessage, 1000);
     }, 3000);
   }
 
-  show(type, condition, inputPrompt) {
+  show(type, condition) {
     let result;
     if (type === 'status') {
       if (condition === 'all') {
@@ -92,11 +92,11 @@ class Todo {
     } else if (type === 'tag') {
       result = this.printTags(condition);
     } else {
-      result = '입력하신 검색 조건이 잘못 되었습니다.';
+      result = message.WRONG_TYPE;
     }
     console.log(result);
 
-    inputPrompt.prompt();
+    this.inputPrompt.prompt();
   }
 
   printAll() {
