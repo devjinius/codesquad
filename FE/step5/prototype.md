@@ -109,3 +109,11 @@ ES 6부터는 class 키워드를 사용할 수 있게 되었다. 근데 이건 �
 Object의 create 방식을 사용해서 만드는 방식이다. 그런데 자주 사용되지는 않고 null 객체를 만들 정도에 사용한다.
 
 `Object.create(null)` 라고 만들면 프로토타입과 관계되지 않은 객체가 생성된다.
+
+---
+
+### 참고자료
+
+- You Dont Know JS this와 객체 프로토타입, 비동기와 성능, 카일 심슨, 한빛미디어, 이일웅 옮김
+- [JavaScript : 프로토타입(prototype) 이해](http://www.nextree.co.kr/p7323/)
+- [Poiemaweb - 프로토타입](https://poiemaweb.com/js-prototype)
