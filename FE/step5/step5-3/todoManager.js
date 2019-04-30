@@ -1,13 +1,15 @@
 const Todo = require('./todo');
 
-class ManagingTodo {
-  constructor({ data, inputPrompt, msgObj, todoError, history }) {
+class TodoManager {
+  constructor({ data, inputPrompt, msgObj, todoError, history, delayTime, updateDelayTime }) {
     this.countedStatus = { todo: 0, doing: 0, done: 0 };
     this.managedlist = this.initManagedlist(data);
     this.msgObj = msgObj;
     this.inputPrompt = inputPrompt;
     this.todoError = todoError;
     this.history = history;
+    this.delayTime = delayTime;
+    this.updateDelayTime = updateDelayTime;
   }
 
   add(name, tags = '[]', status = 'todo') {
@@ -23,7 +25,7 @@ class ManagingTodo {
 
     const newTodo = new Todo({ name, tags, status });
 
-    this.controlTodoList({
+    this.manageTodoList({
       methodName: 'add',
       targetTodo: newTodo,
       message: this.msgObj.add(newTodo.name, newTodo.id)
@@ -43,7 +45,7 @@ class ManagingTodo {
       throw new Error(this.msgObj.getInvalidIdError);
     }
 
-    this.controlTodoList({
+    this.manageTodoList({
       methodName: 'delete',
       targetTodo: deletedTodo,
       message: this.msgObj.delete(deletedTodo.name, deletedTodo.status)
@@ -69,12 +71,11 @@ class ManagingTodo {
       throw new Error(this.msgObj.getSameStatusError(changeTargetTodo.status, changeStatus));
     }
 
-    this.controlTodoList({
+    this.manageTodoList({
       methodName: 'update',
       targetTodo: Object.assign({}, changeTargetTodo),
       message: this.msgObj.update(changeTargetTodo.name, changeStatus),
-      changeStatus,
-      isUndo: false
+      changeStatus
     });
 
     this.history.append({
@@ -84,38 +85,25 @@ class ManagingTodo {
     });
   }
 
-  controlTodoList({ methodName, targetTodo, message, changeStatus, isUndo = false }) {
-    switch (methodName) {
-      case 'add':
-        this.managedlist.push(targetTodo);
-        this.countedStatus[targetTodo.status] += 1;
+  manageTodoList({ methodName, targetTodo, message, changeStatus }) {
+    if (methodName === 'update') {
+      this.countedStatus[targetTodo.status] -= 1;
+      this.countedStatus[changeStatus] += 1;
+      targetTodo.status = changeStatus;
 
-        this.printMsg(message, 1000);
-        break;
+      setTimeout(() => {
+        this.printMsg(message, this.delayTime);
+      }, this.updateDelayTime);
 
-      case 'delete':
-        this.managedlist = this.managedlist.filter(todo => todo.id !== targetTodo.id);
-        this.countedStatus[targetTodo.status] -= 1;
-
-        this.printMsg(message, 1000);
-        break;
-
-      case 'update':
-        if (isUndo) {
-          const tempStatus = targetTodo.status;
-          targetTodo.status = changeStatus;
-          changeStatus = tempStatus;
-        }
-
-        this.countedStatus[targetTodo.status] -= 1;
-        this.countedStatus[changeStatus] += 1;
-        targetTodo.status = changeStatus;
-
-        setTimeout(() => {
-          this.printMsg(message, 1000);
-        }, 3000);
-        break;
+      return undefined;
     }
+
+    this.managedlist =
+      methodName === 'add'
+        ? this.managedlist.concat(targetTodo)
+        : this.managedlist.filter(todo => todo.id !== targetTodo.id);
+    this.countedStatus[targetTodo.status] += methodName === 'add' ? 1 : -1;
+    this.printMsg(message, this.delayTime);
   }
 
   initManagedlist(data) {
@@ -173,59 +161,43 @@ class ManagingTodo {
   }
 
   undo() {
-    const { methodName, todo, changeStatus } = this.history.undo();
-    switch (methodName) {
-      case 'add':
-        this.controlTodoList({
-          methodName: 'delete',
-          targetTodo: todo,
-          message: this.msgObj.getUndoMessage(methodName)
-        });
-        break;
-      case 'delete':
-        this.controlTodoList({
-          methodName: 'add',
-          targetTodo: todo,
-          message: this.msgObj.getUndoMessage(methodName)
-        });
-        break;
-      case 'update':
-        this.controlTodoList({
-          methodName,
-          targetTodo: todo,
-          message: this.msgObj.getUndoMessage(methodName),
-          changeStatus,
-          isUndo: true
-        });
+    const undoData = this.history.undo();
+    const { methodName, todo } = undoData;
+    let { changeStatus } = undoData;
+
+    const undoMethodMapping = {
+      add: 'delete',
+      delete: 'add',
+      update: 'update'
+    };
+
+    if (methodName === 'update') {
+      const tempStatus = todo.status;
+      todo.status = changeStatus;
+      changeStatus = tempStatus;
     }
+
+    const manageTodoParams = {
+      methodName: undoMethodMapping[methodName],
+      targetTodo: todo,
+      changeStatus,
+      message: this.msgObj.getUndoMessage(methodName)
+    };
+
+    this.manageTodoList(manageTodoParams);
   }
 
   redo() {
     const { methodName, todo, changeStatus } = this.history.redo();
-    switch (methodName) {
-      case 'add':
-        this.controlTodoList({
-          methodName,
-          targetTodo: todo,
-          message: this.msgObj.getRedoMessage(methodName)
-        });
-        break;
-      case 'delete':
-        this.controlTodoList({
-          methodName,
-          targetTodo: todo,
-          message: this.msgObj.getRedoMessage(methodName)
-        });
-        break;
-      case 'update':
-        this.controlTodoList({
-          methodName,
-          targetTodo: todo,
-          message: this.msgObj.getRedoMessage(methodName),
-          changeStatus,
-          isUndo: false
-        });
-    }
+
+    const manageTodoParams = {
+      methodName,
+      targetTodo: todo,
+      changeStatus,
+      message: this.msgObj.getUndoMessage(methodName)
+    };
+
+    this.manageTodoList(manageTodoParams);
   }
 }
-module.exports = ManagingTodo;
+module.exports = TodoManager;

@@ -7,15 +7,13 @@
 - index.js
   - 프로그램을 실행하는 곳
 - todo.js
-  - Todo 클래스
+  - Todo 프로토타입
 - managingTodo.js
-  - todo를 관리하는 프로그램의 클래스
+  - todo를 관리하는 프로그램의 프로토타입
 - msg.js
-  - 메세지를 관리하는 객체
+  - 메세지를 관리하는 프로토타입
 - todoError.js
-  - 에러를 발생시키는 클래스
-- history.js
-  - 명령의 히스토리를 관리하는 클래스
+  - 에러를 발생시키는 프로토타입
 
 ### 프로그램 설명
 
@@ -63,9 +61,7 @@ $ delete$1
       - `done`
 - `delete`
   - id
-- undo\$
-- redo\$
 
 ---
 
-updated : 2019-04-29
+updated : 2019-04-25

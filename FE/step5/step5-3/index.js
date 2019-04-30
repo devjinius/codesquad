@@ -1,5 +1,5 @@
 const data = require('../data');
-const ManagingTodo = require('./managingTodo');
+const TodoManager = require('./todoManager');
 const msgObj = require('./msg');
 const TodoError = require('./todoError');
 const History = require('./history');
@@ -13,7 +13,15 @@ const inputPrompt = readline.createInterface({
 
 const todoError = new TodoError();
 const history = new History({ maxLength: 3, msgObj });
-const managingTodo = new ManagingTodo({ data, inputPrompt, msgObj, todoError, history });
+const todoManager = new TodoManager({
+  data,
+  inputPrompt,
+  msgObj,
+  todoError,
+  history,
+  delayTime: 1000,
+  updateDelayTime: 3000
+});
 
 console.log('0을 입력하면 프로그램이 종료됩니다.');
 inputPrompt.setPrompt('명령하세요 : ');
@@ -32,11 +40,11 @@ inputPrompt.on('line', userInput => {
     const userInputArr = userInput.split('$');
     const methodName = userInputArr.splice(0, 1);
 
-    if (!todoError.invalidInst(managingTodo, methodName)) {
+    if (!todoError.invalidInst(todoManager, methodName)) {
       throw new Error(msgObj.getInvalisdInstError);
     }
 
-    managingTodo[methodName](...userInputArr);
+    todoManager[methodName](...userInputArr);
   } catch (error) {
     console.log(error.message);
     inputPrompt.prompt();
