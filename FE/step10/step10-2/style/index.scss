@@ -1,0 +1,213 @@
+@import './style/flex.scss';
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap');
+
+$btn-primary-color: #ff5a60;
+$font-size: 16px;
+
+@function calcRem($size) {
+  @return #{$size / $font-size}rem;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: $font-size;
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+.ico {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-position: center;
+  background-size: 100%;
+  vertical-align: middle;
+
+  &.ico-circle-star {
+    background-image: url('../images/ico-circle-star.png');
+  }
+
+  &.ico-star {
+    background-image: url('../images/ico-star.png');
+  }
+}
+
+#hero {
+  background-image: url('../images/rectangle.png');
+  background-size: cover;
+  width: 100%;
+  height: 620px;
+  background-repeat: no-repeat;
+}
+
+.inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  height: inherit;
+}
+
+.inner.vertical {
+  @include flexbox();
+  @include align-items(center);
+}
+
+.searchContainer {
+  background-color: #fff;
+  width: 460px;
+  height: 500px;
+  box-sizing: border-box;
+  padding: calcRem(18px) calcRem(25px);
+  @include flexbox();
+  @include flex-direction(column);
+  @include justify-content(space-between);
+
+  &__title {
+    font-size: calcRem(23px);
+  }
+
+  &__desc {
+    font-size: calcRem(17px);
+  }
+
+  flex-shrink &__desc {
+    line-height: 1.4;
+  }
+}
+
+.search {
+  @include flex(1 1 auto);
+
+  @include flexbox();
+  @include flex-direction(column);
+  @include justify-content(space-around);
+
+  &__group {
+    &.half {
+      @include flexbox();
+      @include justify-content(space-between);
+    }
+  }
+  &__halfGroup {
+    width: 49%;
+  }
+
+  &__label {
+    display: block;
+    font-weight: bold;
+    font-size: calcRem(13px);
+    margin: calcRem(7px) 0px;
+  }
+
+  &__input {
+    border-radius: 4px;
+    border: solid 1px #d5d2d2;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: #000;
+    }
+  }
+
+  &__btn {
+    text-align: center;
+    width: 100%;
+    padding: 12px 20px;
+    box-sizing: border-box;
+  }
+}
+
+.reviewContainer {
+  margin: calcRem(50px) 0;
+  &__wrapper {
+    @include flexbox();
+    @include justify-content(space-between);
+    padding: 0px;
+  }
+
+  &__title {
+    height: 40px;
+    font-size: calcRem(20px);
+    font-weight: bold;
+    margin: 0px;
+    line-height: 2;
+  }
+
+  &__summary {
+    margin: 15px 0px;
+  }
+}
+
+.review {
+  @include flexbox();
+  @include flex-direction(column);
+  @include justify-content(space-between);
+  width: 320px;
+  box-sizing: border-box;
+
+  & > * {
+    margin: 10px 0px;
+  }
+
+  &__figure {
+    padding: 0px;
+    margin: 0px;
+  }
+
+  &__profileWrapper {
+    @include flexbox();
+    @include align-items(center);
+
+    img {
+      width: 44px;
+      height: 44px;
+    }
+
+    .review__profile {
+      @include flex(1 1 auto);
+      margin-left: 10px;
+
+      h6 {
+        margin-top: 0px;
+        margin-bottom: 5px;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+.btn-primary {
+  background-color: #ff5a60;
+  color: #fff;
+  font-weight: bolder;
+  font-size: 0.9rem;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+}
