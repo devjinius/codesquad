@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .target {
+        width: 500px;
+        height: 500vh;
+        background-color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="target"></div>
+  </body>
+  <script>
+    const target = document.querySelector('.target');
+
+    function throttling(fn, delay) {
+      let isRunning = false;
+      let nextTime = 0;
+      return (...args) => {
+        isRunning = Date.now() - nextTime > delay || nextTime == 0;
+        console.log('event');
+        if (isRunning) {
+          fn.call(this, ...args);
+          nextTime = Date.now();
+        }
+      };
+    }
+    let count = 0;
+    const countHandler = () => {
+      count += 1;
+      console.log(count);
+    };
+    window.addEventListener('load', () => {
+      document.addEventListener('scroll', throttling(countHandler, 500, count));
+    });
+  </script>
+</html>
