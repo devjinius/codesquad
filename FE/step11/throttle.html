@@ -23,21 +23,22 @@
       let isRunning = false;
       let nextTime = 0;
       return (...args) => {
-        isRunning = Date.now() - nextTime > delay || nextTime == 0;
+        isRunning = performance.now() - nextTime > delay || nextTime == 0;
         console.log('event');
         if (isRunning) {
           fn.call(this, ...args);
-          nextTime = Date.now();
+          nextTime = performance.now();
         }
       };
     }
+
     let count = 0;
     const countHandler = () => {
       count += 1;
       console.log(count);
     };
     window.addEventListener('load', () => {
-      document.addEventListener('scroll', throttling(countHandler, 500, count));
+      document.addEventListener('scroll', throttling(countHandler, 2000, count));
     });
   </script>
 </html>
