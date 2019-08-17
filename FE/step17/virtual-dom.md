@@ -62,7 +62,7 @@ render는 결국 dom tree를 만드는 작업. react는 state ⇒ render로 uni 
 
 ## fiber
 
-react 에서는 virtual dom을 구현하고자 fiber를 사용한다.
+react 에서는 virtual dom외에 fiber라는 것으로 성능 최적화를 한다.
 
 > “Fiber is reimplementation of the stack. ( virtual stack frame )”
 
@@ -79,3 +79,9 @@ task를 잘게 쪼개어 우선순위를 부여하고 이를 조작하여 main t
 내부 처리 성능의 최적화는 결국 개발 생산성 증가가 아니라 UX 증가가 목적.
 
 따라서 react component가 render되는 이 모든 일련의 최적화된 작업(reconciliation, virtual dom, render, diffing)들은 모두 UX를 위함이다.
+
+---
+
+### 참고자료
+
+- [남다른 개선방법을 다시 보여준 페이스북의 React Fiber](https://medium.com/@codesquad_yoda/%EB%82%A8%EB%8B%A4%EB%A5%B8-%EA%B0%9C%EC%84%A0%EB%B0%A9%EB%B2%95%EC%9D%84-%EB%8B%A4%EC%8B%9C-%EB%B3%B4%EC%97%AC%EC%A4%80-%ED%8E%98%EC%9D%B4%EC%8A%A4%EB%B6%81%EC%9D%98-react-fiber-80b7ca5bd9bb)
